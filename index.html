@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Power Strip - MainActivity Mock</title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-100 flex items-center justify-center">
+
+  <!-- MainActivity 루트 레이아웃 느낌 -->
+  <div class="w-[360px] h-[720px] bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
+
+    <!-- === 상단 앱바 (Android: ConstraintLayout + TextView들) === -->
+    <header class="h-14 bg-indigo-600 px-4 flex items-center justify-between">
+      <div class="flex flex-col">
+        <span class="text-sm text-indigo-100 font-semibold">Smart Power Strip</span>
+        <span class="text-[11px] text-indigo-200">블루투스 멀티탭 제어</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span class="text-[11px] text-white font-medium">연결됨</span>
+      </div>
+    </header>
+
+    <!-- === 콘텐츠 영역 (Android: 상단 앱바 아래 ConstraintLayout 영역) === -->
+    <main class="flex-1 flex flex-col bg-slate-50">
+      <!-- 위쪽: 기기 리스트 + 전체 OFF 버튼을 포함하는 영역 -->
+      <section class="flex-1 overflow-y-auto px-4 pt-3 space-y-3">
+        
+        <!-- [섹션] 기기 리스트 제목 (Android: TextView) -->
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-semibold text-slate-600">
+            제어 중인 멀티탭
+          </h2>
+          <span class="text-[11px] text-slate-400">
+            총 3개
+          </span>
+        </div>
+
+        <!-- === 기기 리스트 (Android: RecyclerView) === -->
+        <!-- 아이템 하나가 CardView에 해당 -->
+        <div class="space-y-2">
+
+          <!-- CardView 아이템 1 -->
+          <article class="bg-white rounded-2xl shadow-sm p-4 flex items-center justify-between">
+            <div class="flex flex-col">
+              <span class="text-sm font-semibold text-slate-800">
+                책상 스탠드 멀티탭
+              </span>
+              <span class="text-[11px] text-slate-500 mt-0.5">
+                Device: STRIP_1 · 상태: 
+                <span class="text-emerald-500 font-semibold">ON</span>
+              </span>
+            </div>
+            <!-- ON/OFF 버튼 (Android: Switch 또는 ToggleButton) -->
+            <button
+              class="w-11 h-6 rounded-full bg-emerald-500 flex items-center px-1 transition">
+              <span class="w-4 h-4 rounded-full bg-white translate-x-5"></span>
+            </button>
+          </article>
+
+          <!-- CardView 아이템 2 -->
+          <article class="bg-white rounded-2xl shadow-sm p-4 flex items-center justify-between">
+            <div class="flex flex-col">
+              <span class="text-sm font-semibold text-slate-800">
+                PC 본체 멀티탭
+              </span>
+              <span class="text-[11px] text-slate-500 mt-0.5">
+                Device: STRIP_2 · 상태: 
+                <span class="text-rose-500 font-semibold">OFF</span>
+              </span>
+            </div>
+            <button
+              class="w-11 h-6 rounded-full bg-slate-300 flex items-center px-1 transition">
+              <span class="w-4 h-4 rounded-full bg-white translate-x-0"></span>
+            </button>
+          </article>
+
+          <!-- CardView 아이템 3 -->
+          <article class="bg-white rounded-2xl shadow-sm p-4 flex items-center justify-between">
+            <div class="flex flex-col">
+              <span class="text-sm font-semibold text-slate-800">
+                공기청정기 멀티탭
+              </span>
+              <span class="text-[11px] text-slate-500 mt-0.5">
+                Device: STRIP_3 · 상태: 
+                <span class="text-emerald-500 font-semibold">ON</span>
+              </span>
+            </div>
+            <button
+              class="w-11 h-6 rounded-full bg-emerald-500 flex items-center px-1 transition">
+              <span class="w-4 h-4 rounded-full bg-white translate-x-5"></span>
+            </button>
+          </article>
+
+        </div>
+
+        <!-- === 전체 OFF 버튼 (Android: 하단에 고정된 Button 느낌) === -->
+        <div class="pt-2">
+          <button
+            class="w-full py-3 rounded-2xl bg-rose-600 text-white text-xs font-semibold active:scale-95 transition">
+            모든 멀티탭 전원 OFF
+          </button>
+        </div>
+
+      </section>
+
+      <!-- === 로그 영역 (Android: RecyclerView or ScrollView + LinearLayout) === -->
+      <section class="h-32 bg-white border-t border-slate-200 px-4 py-2">
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="text-[11px] font-semibold text-slate-700">최근 로그</h3>
+          <button class="text-[10px] text-slate-400">
+            로그 지우기
+          </button>
+        </div>
+        <div class="h-[88px] overflow-y-auto text-[11px] text-slate-600 space-y-0.5">
+          <p>· [23:01] STRIP_1 블루투스 연결됨</p>
+          <p>· [23:02] STRIP_1 전원 ON</p>
+          <p>· [23:05] STRIP_3 전원 ON</p>
+          <p>· [23:20] STRIP_2 전원 OFF</p>
+          <p>· [23:30] STRIP_2 블루투스 연결 해제</p>
+        </div>
+      </section>
+    </main>
+
+  </div>
+</body>
+</html>
