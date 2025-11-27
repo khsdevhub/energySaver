@@ -185,6 +185,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 페어링된 기기 목록
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Set<BluetoothDevice> paired = btAdapter.getBondedDevices();
 
         if (paired.isEmpty()) {
