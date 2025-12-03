@@ -37,8 +37,6 @@ public class BluetoothHelper {
 
     private static final String TAG = "BluetoothHelper";
 
-    // HM-10 / HC-10 UART UUID (기존 코드 그대로)
-    // HM-10 / HC-10 계열 UART
     private static final UUID UART_SERVICE_UUID =
             UUID.fromString("0000FFE0-0000-1000-8000-00805F9B34FB");
     private static final UUID UART_CHAR_UUID =
@@ -50,9 +48,9 @@ public class BluetoothHelper {
     private static final long SCAN_PERIOD = 10000L;
 
     public interface Callback {
-        void onStatusText(String text);          // 상단 상태 텍스트나 서브타이틀 변경
-        void onLog(String log);                  // 로그 영역에 추가
-        void onMessageReceived(String msg);      // 아두이노에서 온 데이터
+        void onStatusText(String text);
+        void onLog(String log);
+        void onMessageReceived(String msg);
         void onDeviceFound(BluetoothDevice device, String displayText);
         void onConnected();
         void onDisconnected();
@@ -61,7 +59,6 @@ public class BluetoothHelper {
     private final Activity activity;
     private final Callback callback;
 
-    // BLE 관련
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
     private BluetoothGatt bluetoothGatt;
@@ -90,7 +87,6 @@ public class BluetoothHelper {
         }
     }
 
-    // 외부에서 권한 요청을 시작할 때 호출
     public void checkBluetoothPermissions() {
         String[] permissions;
 
@@ -125,7 +121,6 @@ public class BluetoothHelper {
         }
     }
 
-    // Activity 의 onRequestPermissionsResult 에서 넘겨줌
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -151,7 +146,6 @@ public class BluetoothHelper {
         }
     }
 
-    // Activity 의 onActivityResult 에서 넘겨줌
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == RESULT_OK) {
@@ -186,9 +180,6 @@ public class BluetoothHelper {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // 스캔
-    // ─────────────────────────────────────────────────────────────
     public void startBleScan() {
         if (bluetoothAdapter == null) return;
 
@@ -275,9 +266,6 @@ public class BluetoothHelper {
         }
     };
 
-    // ─────────────────────────────────────────────────────────────
-    // 연결 & UART
-    // ─────────────────────────────────────────────────────────────
     public void connectToBleDevice(BluetoothDevice device) {
         if (device == null) return;
 
@@ -429,7 +417,6 @@ public class BluetoothHelper {
         }
     };
 
-    // 생명주기 정리
     public void onPause() {
         stopBleScan();
     }

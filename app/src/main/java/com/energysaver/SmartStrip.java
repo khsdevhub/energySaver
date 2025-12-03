@@ -5,10 +5,8 @@ import org.json.JSONObject;
 
 public class SmartStrip {
 
-    // UI에 보이는 이름
     private String name;
 
-    // 실제 블루투스 기기의 MAC 주소 (고유 키)
     private String macAddress;
 
     private boolean isOn;
@@ -49,14 +47,14 @@ public class SmartStrip {
             obj.put("mac", macAddress);
             obj.put("on", isOn);
         } catch (JSONException e) {
-            // 무시하거나 로그 찍어도 됨
+            // 무시
         }
         return obj;
     }
 
     public static SmartStrip fromJson(JSONObject obj) throws JSONException {
         String name = obj.optString("name", "이름 없음");
-        String mac = obj.getString("mac");         // mac은 반드시 있어야 한다고 가정
+        String mac = obj.getString("mac");
         boolean on = obj.optBoolean("on", false);
         return new SmartStrip(name, mac, on);
     }

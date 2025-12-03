@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 String mac = intent.getStringExtra("mac");
                 String msg = intent.getStringExtra("msg");
                 appendLog("RX(" + mac + "): " + msg.trim());
-                // 여기서 아두이노에서 오는 데이터에 따라 추가 처리 가능
             }
         }
     };
@@ -181,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
                     pairingDialog.dismiss();
                 }
 
-                // 페어링 완료 → 리스트에 추가 + 서비스 연결 요청
                 registerAndConnectSmartStrip(pendingPairDevice);
                 pendingPairDevice = null;
 
@@ -202,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // UI 바인딩
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -212,17 +209,12 @@ public class MainActivity extends AppCompatActivity {
         btnAllOff = findViewById(R.id.btnAllOff);
         tvLog = findViewById(R.id.tvLog);
 
-        // BLE 어댑터 초기화
         BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager != null ? bluetoothManager.getAdapter() : null;
 
-        // 초기 예시 데이터 (원하면 지워도 됨)
-        // strips.add(new SmartStrip("책상 스탠드 멀티탭", "00:11:22:33:44:55", false));
-        // strips.add(new SmartStrip("거실 TV 멀티탭", "AA:BB:CC:DD:EE:FF", false));
         loadStripsFromPrefs();
 
-        // 어댑터 & 리스너
         adapter = new SmartStripAdapter(strips,
                 new SmartStripAdapter.OnSmartStripInteractionListener() {
                     @Override
@@ -230,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
                         strip.setOn(isOn);
                         adapter.notifyDataSetChanged();
 
-                        // 상태를 저장해서, 앱 껐다 켜도 ON/OFF 유지되게
                         saveStripsToPrefs();
 
                         String cmd = isOn ? "ON\n" : "OFF\n";
@@ -253,10 +244,8 @@ public class MainActivity extends AppCompatActivity {
         rvDevices.setLayoutManager(new LinearLayoutManager(this));
         rvDevices.setAdapter(adapter);
 
-        // 새 기기 추가하기 → 스캔/등록
         tvAddNewDevice.setOnClickListener(v -> startScanAndShowDialog());
 
-        // 모든 멀티탭 OFF
         btnAllOff.setOnClickListener(v -> {
             for (SmartStrip strip : strips) {
                 if (strip.isOn()) {
@@ -275,14 +264,11 @@ public class MainActivity extends AppCompatActivity {
 
         appendLog("앱 시작");
 
-        // BLE Foreground Service 시작 + 바인딩
         startAndBindBleService();
 
-        // BOND 상태 변경 수신 등록
         IntentFilter bondFilter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         registerReceiver(bondReceiver, bondFilter);
 
-        // 권한 체크
         checkAndRequestBluetoothPermissions();
     }
 
@@ -319,7 +305,6 @@ public class MainActivity extends AppCompatActivity {
                 perms.add(Manifest.permission.BLUETOOTH_CONNECT);
             }
         } else {
-            // 예전 버전에서는 위치 권한 필요
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -406,11 +391,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // 이전 스캔 결과 초기화
         scannedDevices.clear();
         scannedDeviceInfo.clear();
 
-        // 다이얼로그용 ListView & Adapter
         ListView listView = new ListView(this);
         scanListAdapter = new ArrayAdapter<>(
                 this,
@@ -524,13 +507,11 @@ public class MainActivity extends AppCompatActivity {
         String mac = device.getAddress();
         if (mac == null) return;
 
-        // 이미 등록된 기기는 스캔 리스트에서 제외
         if (isRegisteredDevice(mac)) {
             appendLog("이미 등록된 기기 스킵: " + displayText);
             return;
         }
 
-        // 스캔 리스트 중복 체크
         for (BluetoothDevice d : scannedDevices) {
             if (mac.equals(d.getAddress())) {
                 return;
@@ -558,17 +539,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // 이미 등록된 기기면 막기
         if (isRegisteredDevice(mac)) {
             Toast.makeText(this, "이미 등록된 기기입니다.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
-            // 이미 페어링 되어 있으면 바로 추가 + 연결
             registerAndConnectSmartStrip(device);
         } else {
-            // 앱 안에서 페어링 팝업 띄우기
             showPairingPopup(device);
         }
     }
@@ -669,7 +647,6 @@ public class MainActivity extends AppCompatActivity {
         appendLog("새 기기 등록: " + name + " / " + mac);
         Toast.makeText(this, "새 멀티탭 추가: " + name, Toast.LENGTH_SHORT).show();
 
-        // Foreground Service에 연결 요청 (자동 재연결 포함)
         if (serviceBound && bleService != null) {
             bleService.connect(mac);
         } else {
@@ -743,7 +720,6 @@ public class MainActivity extends AppCompatActivity {
         appendLog("멀티탭 삭제: " + removed.getName() + " (" + removed.getMacAddress() + ")");
         Toast.makeText(this, "삭제됨: " + removed.getName(), Toast.LENGTH_SHORT).show();
 
-        // 서비스 연결도 끊고 싶으면 여기서 bleService.disconnect(mac) 호출
         if (serviceBound && bleService != null) {
             bleService.disconnect(removed.getMacAddress());
         }
@@ -794,10 +770,8 @@ public class MainActivity extends AppCompatActivity {
         f.addAction("BLE_MESSAGE");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Android 13(API 33)/14 이상에서는 플래그 필수
             registerReceiver(bleReceiver, f, Context.RECEIVER_NOT_EXPORTED);
         } else {
-            // 예전 방식 그대로
             registerReceiver(bleReceiver, f);
         }
     }
@@ -839,8 +813,5 @@ public class MainActivity extends AppCompatActivity {
             unbindService(serviceConnection);
             serviceBound = false;
         }
-        // 서비스 자체는 Foreground로 계속 돌리고 싶으면 stopService는 호출하지 않음
-        // 완전히 종료하고 싶으면 아래 사용:
-        // stopService(new Intent(this, BleForegroundService.class));
     }
 }

@@ -42,7 +42,6 @@ public class SmartStripAdapter extends RecyclerView.Adapter<SmartStripAdapter.St
         holder.tvName.setText(strip.getName());
         holder.tvStatus.setText(strip.getStatusText());
 
-        // 스위치 리스너 초기화 후 상태 반영
         holder.switchPower.setOnCheckedChangeListener(null);
         holder.switchPower.setChecked(strip.isOn());
 
@@ -52,7 +51,6 @@ public class SmartStripAdapter extends RecyclerView.Adapter<SmartStripAdapter.St
             }
         });
 
-        // 롱클릭 팝업 (이름 변경, 삭제)
         holder.itemView.setOnLongClickListener(v -> {
             if (listener != null) {
                 int pos = holder.getAdapterPosition();

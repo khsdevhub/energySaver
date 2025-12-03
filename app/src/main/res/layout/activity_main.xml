@@ -10,20 +10,23 @@
     tools:context=".MainActivity">
 
     <!-- 상단 앱바 영역 -->
+
+    <!-- 부제목 / 상태 설명 -->
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="56dp"
         android:background="@color/purple_500"
+        android:minHeight="56dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Smart Power Strip"
-        app:titleTextColor="@android:color/white"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="당신만의 전기 지킴이"
+        app:titleTextColor="@android:color/white" />
 
-    <!-- 부제목 / 상태 설명 -->
     <TextView
         android:id="@+id/tvSubtitle"
         android:layout_width="0dp"
